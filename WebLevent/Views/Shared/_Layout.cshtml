@@ -1,0 +1,151 @@
+﻿@*<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Levent</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Levent.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Levent</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Levent - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+*@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Levent.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ClientAssets/main.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ClientAssets/base.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ClientAssets/fonts/fontawesome-free-5.15.4-web/css/all.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" asp-append-version="true" />
+
+
+    <title>Levents</title>
+</head>
+<body>
+    <div class="app">
+        <nav class="header_navbar">
+            <div class="header__nav--top sb-topnav navbar navbar-expand navbar-dark bg-dark">
+                <ul class="header_navbar_list">
+                    <span class="header_navbar_items">
+                        <i class="fas fa-globe-americas"></i>
+                        Levents love you
+                    </span>
+                </ul>
+                <ul class="header_navbar_list">
+                    <li class="header_navbar_items">
+                        @*<a class="header__navbar-icon-link" href="">
+                        Mua Ngay!
+                        <i class="far fa-money-bill-alt"></i>
+                        </a>*@
+                        <div class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 text-light header__navbar-icon-link">
+                            <partial name="_LoginPartial" />
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <header class="">
+            <div class="Host__Store">
+                <div class="icon__function_list icon__function_search">
+                    <i class="icon__function_itemss icon__function_search-btn fas fa-search"></i>
+                    <input style="font-size: small;" id="timkiem" name="timkiem" type="text" class="header__search-input " placeholder="Nhập để tìm kiếm sản phẩm">
+                </div>
+                <a asp-controller="Home" asp-action="Index"><img src="~/ClientAssets/img/logo.png" alt=""></a>
+                <div class="icon__function_list">
+                    <i class="icon__function_items far fa-bell"></i>
+
+                    <div class="icon__function_items fas " > 
+                        <partial name="_CartPartial" />
+                    </div>
+                </div>
+            </div>
+            <div class="header__nav_bot">
+                <ul class="header__nav_bot-list">
+                    <li class="header__nav_bot-item">
+                        <a class="header__nav_bot-link" asp-area="" asp-controller="Home" asp-action="About">Về chúng tôi</a>
+                    </li>
+                    <li class="header__nav_bot-item header__nav_bot-flex">
+                        <select class="form-select fa-angle-down header__nav_bot-link" aria-label="Default select example" id="txtCatID" name="txtCatID" style="min-width:200px; border:0rem; font-size: 17px; padding:0rem;" asp-items="ViewBag.DanhMuc">
+                            <option value="0" disabled selected>Sản phẩm</option>
+                            <option value="all">Tất cả</option>
+                        </select>
+
+                    </li>
+                    <li class="header__nav_bot-item">
+                        <a class="header__nav_bot-link" asp-area="" asp-controller="Blog" asp-action="Index">Bộ sưu tập</a>
+                    </li>
+                    <li class="header__nav_bot-item">
+                        <a class="header__nav_bot-link header__nav_bot-sale" asp-area="" asp-controller="Home" asp-action="About">Giảm giá</a>
+                    </li>
+                    <li class="header__nav_bot-item">
+                        <a class="header__nav_bot-link" asp-area="" asp-controller="Home" asp-action="Contact">Liên hệ</a>
+                    </li>
+                    <li class="header__nav_bot-item">
+                        <a class="header__nav_bot-link" asp-area="" asp-controller="Home" asp-action="About">Chăm sóc khách hàng</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+        @await Html.PartialAsync("_FooterPartialView.cshtml")
+    </div>
+
+    @RenderSection("upload", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("Notyf")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

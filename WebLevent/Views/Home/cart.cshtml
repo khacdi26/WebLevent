@@ -1,0 +1,139 @@
+﻿@model List<WebLevent.Models.CartItem>
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="records_table">
+ <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">
+            <a style="color: #000; text-decoration: none;" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item active "><strong>Giỏ hàng</strong></li>
+    </ol>
+
+    @if (Model.Count > 0)
+    {
+        decimal total = 0;
+        int stt = 1;
+
+        <table class="table">
+            <tr>
+                <th>#</th>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+                <th></th>
+            </tr>
+            @foreach (var cartitem in Model)
+            {
+                var thanhtien = cartitem.quantity * cartitem.sanPham.Price;
+                total += thanhtien;
+
+                <tr>
+                    <td>@(stt++)</td>
+                    <td>@cartitem.sanPham.Name</td>
+                    <td>@(cartitem.sanPham.Price.ToString("n0"))</td>
+                    <td><input asp-for="@cartitem.quantity" id="@($"quantity-{cartitem.sanPham.Id}")" /></td>
+                    <td>@(thanhtien.ToString("n0"))</td>
+                    <td>
+                        <button class="btn btn-dark updatecartitem"
+                        data-productid="@cartitem.sanPham.Id">
+                            Cập nhật
+                        </button>
+                        <a asp-route="removecart" asp-route-productid="@cartitem.sanPham.Id"
+                   class="btn btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-end"><strong>Tổng tiền:</strong></td>
+                <td><strong>@(total.ToString("n0")) VNĐ</strong></td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="container">
+            <a asp-controller="Product" asp-action="Checkout" class="btn btn-success m-1">Gửi đơn hàng</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-dark m-1">Tiếp tục mua sắm</a>
+        </div>
+
+
+    }
+    else
+    {
+        <p class="alert alert-danger">Giỏ hàng trống</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-dark m-1">Tiếp tục mua sắm</a>
+
+    }
+    @section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".updatecartitem").click(function (event) {
+                event.preventDefault();
+                var productid = $(this).attr("data-productid");
+                var quantity = $("#quantity-" + productid).val();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.RouteUrl("updatecart")",
+                    data: {
+                        productid: productid,
+                        quantity: quantity
+                    },
+                    success: function (result) {
+                        window.location.href = "@Url.RouteUrl("cart")";
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            jQuery("#txtCatID").change(function () {
+                var catID = jQuery(this).children(":selected").attr("value");
+                catID = parseFloat(catID);
+                $('#txtCatID option').removeAttr('selected');
+                $("#txtCatID > [value=" + catID + "]").attr("selected", "true");
+                $.ajax({
+                    url: '/Home/Filtter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        CatID: catID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+            $("#timkiem").keyup(function () {
+                var strkeyword = $('#timkiem').val();
+                $.ajax({
+                    url: '/TimKiem/FindProduct/',
+                    datatype: "json",
+                    type: "POST",
+                    data: { keyword: strkeyword },
+                    async: true,
+                    success: function (results) {
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                })
+            });
+        });
+    </script>
+      }
+
+
+</div>

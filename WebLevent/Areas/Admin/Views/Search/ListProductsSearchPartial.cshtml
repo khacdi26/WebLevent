@@ -1,0 +1,45 @@
+﻿@model List<SanPham> 
+
+    @if(Model!= null){
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th scope="row">
+                @item.Id
+            </th>
+            <td>
+                <p> <img src="~/images/sanphams/@item.Hinh" alt="hinh thumnail" height="60px"></p>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img class="img-fluid rounded" src="@item.Hinh" style="max-width: 60px" alt="">
+                    <h6 class="">@item.Name</h6>
+                </div>
+            </td>
+            <td>
+                @item.Loai.Name
+            </td>
+            <td>
+                @item.Price.ToString("#,##0") VNĐ
+            </td>
+            <td>
+                @item.SoLgTn
+            </td>
+            <td>
+                @if (item.SoLgTn.Value > 0)
+                {
+                    <span class="badge rounded-pill bg-success">In Stock</span>
+                }
+                else
+                {
+                    <span class="badge rounded-pill bg-danger">Out Stock</span>
+                }
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-controller="SanPhams" asp-action="Details" asp-route-id="@item.Id"><i class='fa fa-ellipsis-h'></i></a>
+                <a class="btn btn-primary" asp-controller="SanPhams" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                <a class="btn btn-danger" asp-controller="SanPhams" asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
+            </td>
+        </tr>
+    }
+    }

@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+    string jsoncart = session.GetString(WebLevent.Controllers.HomeController.CARTKEY);
+    if (jsoncart != null)
+    {
+        var cart = JsonConvert.DeserializeObject<List<CartItem>>(jsoncart);
+        if(cart.Count==0){
+            <div class="nav-item"><a class="icon__function_items fas fa-shopping-bag" style="color: #000;" asp-route="cart"></a></div>
+        }else{
+            <div class="nav-item ">
+                <a class="icon__function_items fas fa-shopping-bag position-relative" style="color: #000;" asp-route="cart">
+                    <span class="position-absolute translate-middle badge rounded-pill bg-danger fs-6">@cart.Count</span>
+                </a>
+            </div>  
+        }
+        
+
+    }else{
+        <div class="nav-item"><a class="icon__function_items fas fa-shopping-bag" style="color: #000;" asp-route="cart"></a></div>
+    }
+}

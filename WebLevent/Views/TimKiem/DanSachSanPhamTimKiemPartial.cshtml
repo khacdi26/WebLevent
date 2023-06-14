@@ -1,0 +1,36 @@
+﻿@model List<SanPham>
+    @if(Model!= null){
+
+<div id="records_table">
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">
+                <a style="color: #000; text-decoration: none;" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active "><strong>Danh sách sản phẩm tìm kiếm</strong></li>
+        </ol>
+    <div class="app__container">
+
+        <div class="container">
+            <div class="row gy-3" id="records_table">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-4 ">
+                        <div class="card shadow">
+                            <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id" style="text-decoration:none; color:black;">
+                                <img src="~/images/sanphams/@item.Hinh" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <p class="card-text"> @item.Mota</p>
+                                    <h5 class="card-text text-danger m-1"> @item.Price.ToString("#,##0") VNĐ</h5>
+                                        <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@item.Id" class="btn btn-lg btn-dark">Thêm vào giỏ hàng</a>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+        }

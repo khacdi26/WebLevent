@@ -1,0 +1,92 @@
+﻿@model WebLevent.Models.SanPham
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="records_table">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">
+            <a style="color: #000; text-decoration: none;" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item active "><strong>Chi tiết sản phẩm</strong></li>
+    </ol>
+    <div class="row py-5 g-5">
+        <div class="col-12 col-lg-6">
+            <img src="~/images/sanphams/@Model.Hinh" class="m-1 w-100 sliderMainImage shadow" data-bs-toggle="modal" data-bs-target="#imageModal" />
+        </div>
+        <div class="col-12 col-lg-6">
+            <h2 id="productName">@Model.Name</h2>
+            <small class="text-muted">Levent</small>
+            <h4 class="my-4"><span id="price">@Model.Price.ToString("#,##0") </span>VNĐ</h4>
+            <div class="d-grid my-4">
+                <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-lg btn-dark">
+                    Thêm vào giỏ hàng
+                </a>
+            </div>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <h2>
+                        <strong>Mô tả:</strong>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                        <div class="accordion-body"> @Model.Mota </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid my-4">
+                <a class="btn btn-lg btn-dark" asp-controller="Home" asp-action="Index">
+                    Tiếp tục mua sắm
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            jQuery("#txtCatID").change(function () {
+                var catID = jQuery(this).children(":selected").attr("value");
+                catID = parseFloat(catID);
+                $('#txtCatID option').removeAttr('selected');
+                $("#txtCatID > [value=" + catID + "]").attr("selected", "true");
+                $.ajax({
+                    url: '/Home/Filtter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        CatID: catID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+            $("#timkiem").keyup(function () {
+                var strkeyword = $('#timkiem').val();
+                $.ajax({
+                    url: '/TimKiem/FindProduct/',
+                    datatype: "json",
+                    type: "POST",
+                    data: { keyword: strkeyword },
+                    async: true,
+                    success: function (results) {
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                })
+            });
+        });
+    </script>
+}

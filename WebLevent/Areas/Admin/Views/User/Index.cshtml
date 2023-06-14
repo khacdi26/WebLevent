@@ -1,0 +1,51 @@
+﻿@using PagedList.Core.Mvc
+@using WebLevent.Areas.Identity.Data
+
+@model ICollection<WebLeventUser>
+
+@{
+    ViewData["Title"] = "Danh sách tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"> <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a> </li>
+    <li class="breadcrumb-item"> <a class="nav-link" asp-area="Admin" asp-controller="User" asp-action="Index">Quản lý tài khoản</a> </li>
+    <li class="breadcrumb-item active">Danh sách tài khoản</li>
+</ol>
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Họ và tên</th>
+            <th scope="col">Email</th>
+            <th scope="col">Tùy chọn</th>
+        </tr>
+    </thead>
+    <tbody id="records_table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">
+                    @item.Id
+                </th>
+                <td>
+                    @item.FullName
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    <a class="btn btn-dark" asp-area="admin" asp-controller="User" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="SanPhams" asp-route-CatID="@ViewBag.CurrentCatID" asp-action="Index" />
+
+    </ul>
+</nav>*@

@@ -1,0 +1,136 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<WebLevent.Models.SanPham>
+
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách sản phẩm" + CurrentPage;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"> <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a> </li>
+    <li class="breadcrumb-item"> <a class="nav-link" asp-area="Admin" asp-controller="SanPhams" asp-action="Index">Quản lý sản phẩm</a> </li>
+    <li class="breadcrumb-item active">Danh sách sản phẩm: page @CurrentPage</li>
+</ol>
+<hr />
+<div class="d-flex ">
+    <div class="btn-group">
+        <select class="form-select" aria-label="Default select example" id="txtCatID" name="txtCatID" style="min-width:200px;" asp-items="ViewBag.DanhMuc">
+            <option value="0" disabled selected>Chọn danh mục</option>
+            <option value="all">Tất cả</option>
+        </select>
+    </div>
+</div>
+<p>
+    <a class="btn btn-dark m-1" asp-action="Create">Tạo Mới</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Hình</th>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Danh mục</th>
+            <th scope="col">Giá</th>
+            <th scope="col">Tồn kho</th>
+            <th scope="col">Tình trạng</th>
+            <th scope="col">Tùy chọn</th>
+        </tr>
+    </thead>
+    <tbody id="records_table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">
+                    @item.Id
+                </th>
+                <td>
+                    <p> <img src="~/images/sanphams/@item.Hinh" alt="hinh thumnail" height="60px" class="shadow-sm"></p>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid rounded" src="@item.Hinh" style="max-width: 60px" alt="">
+                        <h6 class="">@item.Name</h6>
+                    </div>
+                </td>
+                <td>
+                    @item.Loai.Name
+                </td>
+                <td>
+                    @item.Price.ToString("#,##0") VNĐ
+                </td>
+                <td>
+                    @item.SoLgTn
+                </td>
+                <td>
+                    @if (item.SoLgTn.Value > 0)
+                    {
+                        <span class="badge rounded-pill bg-dark">In Stock</span>
+                    }
+                    else
+                    {
+                        <span class="badge rounded-pill bg-danger">Out Stock</span>
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-dark" asp-controller="SanPhams" asp-action="Details" asp-route-id="@item.Id"><i class='fa fa-ellipsis-h'></i></a>
+                    <a class="btn btn-dark" asp-controller="SanPhams" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a class="btn btn-danger" asp-controller="SanPhams" asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <pager class="pager-container" list="@Model" asp-area="Admin" asp-controller="SanPhams" asp-route-CatID="@ViewBag.CurrentCatID" asp-action="Index" />
+        
+    </ul>
+</nav>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            jQuery("#txtCatID").change(function () {
+                var catID = jQuery(this).children(":selected").attr("value");
+                catID = parseFloat(catID);
+                $('#txtCatID option').removeAttr('selected');
+                $("#txtCatID > [value=" + catID + "]").attr("selected","true");
+                $.ajax({
+                    url: '/Admin/SanPhams/Filtter',
+                    datatype:"json",
+                    type:"GET",
+                    data:{
+                        CatID: catID
+                    },
+                    async:true,
+                    success:function(results){
+                        if(results.status == "success"){
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function(xhr){
+                        alert('error');
+                    }
+                });
+            });
+
+            $("#keyword").keyup(function(){
+                var strkeyword = $('#keyword').val();
+                $.ajax({
+                    url: '/Admin/Search/FindProduct/',
+                    datatype: "json",
+                    type: "POST",
+                    data:{keyword: strkeyword},
+                    async: true,
+                    success: function(results){
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+                    },
+                    error: function(xhr){
+                        alert('error');
+                    }
+                })
+            });
+        });
+    </script>
+}

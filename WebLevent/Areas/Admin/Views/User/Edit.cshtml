@@ -1,0 +1,58 @@
+﻿@using PagedList.Core.Mvc
+@using WebLevent.Areas.Identity.Data
+@using WebLevent.Core.ViewModel
+
+@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa tài khoản" + Model.User.UserName ;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"> <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a> </li>
+    <li class="breadcrumb-item"> <a class="nav-link" asp-area="Admin" asp-controller="User" asp-action="Index">Quản lý tài khoản</a> </li>
+    <li class="breadcrumb-item active">Chỉnh sửa tài khoản: @Model.User.UserName</li>
+</ol>
+<hr />
+<div class="row g-5">
+    <div class="col-md-7 col-lg-8">
+        @using (Html.BeginForm("OnPost","User")){
+            @Html.HiddenFor(h=>Model.User.Id)
+                <div class="row g-3">
+
+                    <div class="col-12">
+                        <h5>Tên người dùng:</h5>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text"></span>
+                            <input asp-for="@Model.User.FullName" class="form-control" autocomplete="username" aria-required="true" />
+                            <span asp-validation-for="@Model.User.FullName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <h5>Email:</h5>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text"></span>
+                            <input asp-for="@Model.User.Email" class="form-control" autocomplete="username" aria-required="true" />
+                            <span asp-validation-for="@Model.User.FullName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <h4 class="mb-3">Quyền truy cập:</h4>
+                <div class="my-3">
+                    @for(int i = 0;i<Model.Roles.Count();i++){
+                        <div class="form-check">
+                            @Html.CheckBoxFor(c => Model.Roles[i].Selected)
+                            @Html.HiddenFor(h => Model.Roles[i].Value)
+                            @Html.LabelFor(l => Model.Roles[i].Selected,Model.Roles[i].Text,new {@class="form-check-label"})
+                            @Html.HiddenFor(h => Model.Roles[i].Text)
+                        </div>
+                    }
+                   
+                </div>
+                <hr class="my-4" />
+                <button class="w-100 btn btn-dark btn-lg" type="submit">Lưu</button>
+        }
+    </div>
+</div>

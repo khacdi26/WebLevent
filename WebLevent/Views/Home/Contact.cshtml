@@ -1,0 +1,110 @@
+﻿
+@{
+    ViewData["Title"] = "Liên hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="records_table">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">
+            <a style="color: #000; text-decoration: none;" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item active "><strong>Liên hệ</strong></li>
+    </ol>
+    <div class="Contact">
+        <h2 class="contact_heading">
+            CONTACT
+        </h2>
+        <p class="contact_sp_heading">
+            Fan? Drop a note!
+        </p>
+        <div class="contact_content">
+            <div class="contact_info">
+                <p class="contact_info_phone">
+                    Hotline:
+                    <a class="phone" href="tel:0375533541">0375533541</a>
+                    <a class="btn_phone" href="tel:0375533541">Gọi ngay</a>
+                </p>
+                <p class="contact_info_email">
+                    Email:
+                    <a class="email" href="mailto:batruong2262002@gmail.com">batruong2262002@gmail.com</a>
+                    <a class="btn_email" href="mailto:batruong2262002@gmail.com">Gửi ngay</a>
+                </p>
+                <p class="contact_info_chat">
+                    Chat:
+                    <a class="chat" href="https://www.facebook.com/messages/t/100013408455407">Messenger</a>
+                    <a class="btn_chat" href="https://www.facebook.com/messages/t/100013408455407">Nhắn ngay</a>
+                </p>
+            </div>
+            <div class="contact_form">
+                <form action="#">
+                    <div class="row">
+                        <div class="col col-half">
+                            <input type="text" placeholder="Name" required class="form_control">
+                        </div>
+                        <div class="col col-half">
+                            <input type="email" placeholder="Email" required class="form_control">
+                        </div>
+                    </div>
+                    <div class="row mt-8">
+                        <div class="col col-full">
+                            <input type="text" placeholder="Message" required class="form_control">
+                        </div>
+                    </div>
+                    <input class="mt-16 btn_send" type="submit" name="" value="SEND" id="">
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="map_section">
+        <img src="~/ClientAssets/img/map.jpg" alt="">
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            jQuery("#txtCatID").change(function () {
+                var catID = jQuery(this).children(":selected").attr("value");
+                catID = parseFloat(catID);
+                $('#txtCatID option').removeAttr('selected');
+                $("#txtCatID > [value=" + catID + "]").attr("selected", "true");
+                $.ajax({
+                    url: '/Home/Filtter',
+                    datatype: "json",
+                    type: "GET",
+                    data: {
+                        CatID: catID
+                    },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl;
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                });
+            });
+
+            $("#timkiem").keyup(function () {
+                var strkeyword = $('#timkiem').val();
+                $.ajax({
+                    url: '/TimKiem/FindProduct/',
+                    datatype: "json",
+                    type: "POST",
+                    data: { keyword: strkeyword },
+                    async: true,
+                    success: function (results) {
+                        $("#records_table").html("");
+                        $("#records_table").html(results);
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                    }
+                })
+            });
+        });
+    </script>
+}
